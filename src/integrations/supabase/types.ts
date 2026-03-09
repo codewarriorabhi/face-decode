@@ -20,23 +20,34 @@ export type Database = {
           date_time: string
           emotion: string
           id: string
-          user_id: string
+          session_id: string | null
+          user_id: string | null
         }
         Insert: {
           confidence: number
           date_time?: string
           emotion: string
           id?: string
-          user_id: string
+          session_id?: string | null
+          user_id?: string | null
         }
         Update: {
           confidence?: number
           date_time?: string
           emotion?: string
           id?: string
-          user_id?: string
+          session_id?: string | null
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "emotion_history_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["session_id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -59,6 +70,30 @@ export type Database = {
           id?: string
           is_blocked?: boolean
           user_id?: string
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          session_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          session_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          session_id?: string
+          status?: string
         }
         Relationships: []
       }
