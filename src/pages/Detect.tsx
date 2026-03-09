@@ -77,17 +77,25 @@ const Detect = () => {
     const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
     setCapturedImage(dataUrl);
     stopWebcam();
-    runAnalysis();
+    runAnalysis(dataUrl);
   };
 
-  const runAnalysis = () => {
+  const runAnalysis = async (imageData?: string) => {
+    const image = imageData || uploadedImage;
+    if (!image) {
+      toast.error("No image to analyze.");
+      return;
+    }
     setIsAnalyzing(true);
     setResults(null);
-    // Simulated AI analysis
-    setTimeout(() => {
-      setResults(generateRandomResults());
+    try {
+      const emotionResults = await analyzeImage(image);
+      setResults(emotionResults);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to analyze image. Please try again.");
+    } finally {
       setIsAnalyzing(false);
-    }, 1800 + Math.random() * 1200);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
