@@ -85,14 +85,14 @@ const Landing = () => (
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/detect">
+            <Link to="/generate">
               <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
-                Try Emotion Detection <ArrowRight className="w-4 h-4" />
+                Generate Share Link <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link to="/auth?mode=signup">
+            <Link to="/detect">
               <Button size="lg" variant="outline" className="gap-2 px-8 h-12 text-base">
-                Create Free Account
+                Try Emotion Detection
               </Button>
             </Link>
           </div>
