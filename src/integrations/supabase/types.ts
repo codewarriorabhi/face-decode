@@ -14,7 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      emotion_history: {
+        Row: {
+          confidence: number
+          date_time: string
+          emotion: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          confidence: number
+          date_time?: string
+          emotion: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          confidence?: number
+          date_time?: string
+          emotion?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
