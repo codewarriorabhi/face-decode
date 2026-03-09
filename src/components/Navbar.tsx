@@ -37,6 +37,7 @@ const Navbar = () => {
                   <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How it Works</a>
                 </>
               )}
+              <Link to="/generate" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Generate Link</Link>
               <Link to="/auth">
                 <Button variant="ghost" size="sm">Log In</Button>
               </Link>

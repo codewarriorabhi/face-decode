@@ -12,6 +12,9 @@ import Dashboard from "./pages/Dashboard";
 import Detect from "./pages/Detect";
 import History from "./pages/History";
 import Admin from "./pages/Admin";
+import Generate from "./pages/Generate";
+import Session from "./pages/Session";
+import SessionDashboard from "./pages/SessionDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
