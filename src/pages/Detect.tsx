@@ -247,7 +247,7 @@ const Detect = () => {
                       <>
                         <img src={uploadedImage} alt="Uploaded" className="w-full h-full object-contain p-2" />
                         <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-                          <Button onClick={runAnalysis} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
+                          <Button onClick={() => runAnalysis()} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
                             {isAnalyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Detect Emotion</>}
                           </Button>
                           <Button variant="outline" onClick={reset} size="icon" className="h-11 w-11 bg-card/80 backdrop-blur">
