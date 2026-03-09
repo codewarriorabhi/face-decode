@@ -5,6 +5,7 @@ const emotionConfig: Record<string, { emoji: string; className: string }> = {
   sad: { emoji: "😢", className: "bg-emotion-sad/15 text-emotion-sad" },
   angry: { emoji: "😠", className: "bg-emotion-angry/15 text-emotion-angry" },
   surprise: { emoji: "😲", className: "bg-emotion-surprise/15 text-emotion-surprise" },
+  surprised: { emoji: "😲", className: "bg-emotion-surprise/15 text-emotion-surprise" },
   fear: { emoji: "😨", className: "bg-emotion-fear/15 text-emotion-fear" },
   disgust: { emoji: "🤢", className: "bg-emotion-disgust/15 text-emotion-disgust" },
   neutral: { emoji: "😐", className: "bg-emotion-neutral/15 text-emotion-neutral" },
