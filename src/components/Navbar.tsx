@@ -79,6 +79,9 @@ const Navbar = () => {
                       <a href="#how-it-works" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>How it Works</a>
                     </>
                   )}
+                  <Link to="/generate" onClick={() => setMobileOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">Generate Link</Button>
+                  </Link>
                   <Link to="/auth" onClick={() => setMobileOpen(false)}>
                     <Button variant="ghost" className="w-full">Log In</Button>
                   </Link>
