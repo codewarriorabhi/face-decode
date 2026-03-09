@@ -4,6 +4,7 @@ import { Camera, Upload, X, Loader2, RotateCcw, Video, ImagePlus, Sparkles, Circ
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import EmotionBadge from "@/components/EmotionBadge";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type EmotionResult = {
@@ -13,21 +14,23 @@ type EmotionResult = {
 
 const EMOTIONS = ["Happy", "Sad", "Angry", "Neutral", "Surprised"];
 
-const generateRandomResults = (): EmotionResult[] => {
-  // Pick a dominant emotion randomly
-  const dominantIdx = Math.floor(Math.random() * EMOTIONS.length);
-  const dominantConfidence = 75 + Math.floor(Math.random() * 20); // 75-94%
-
-  let remaining = 100 - dominantConfidence;
-  const results: EmotionResult[] = EMOTIONS.map((emotion, i) => {
-    if (i === dominantIdx) return { emotion, confidence: dominantConfidence };
-    if (i === EMOTIONS.length - 1) return { emotion, confidence: Math.max(0, remaining) };
-    const share = Math.floor(Math.random() * Math.min(remaining, 15));
-    remaining -= share;
-    return { emotion, confidence: share };
+const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
+  const { data, error } = await supabase.functions.invoke("emotion-detect", {
+    body: { image: imageBase64 },
   });
 
-  return results.sort((a, b) => b.confidence - a.confidence);
+  if (error) throw new Error(error.message || "Analysis failed");
+  if (data?.error) throw new Error(data.error);
+
+  if (!data?.face_detected) {
+    toast.warning("No face detected in the image. Try a clearer photo.");
+  }
+
+  // Map API response to our format (API returns 0-1, we want 0-100)
+  return (data.all_emotions || []).map((e: { emotion: string; confidence: number }) => ({
+    emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
+    confidence: Math.round(e.confidence * 100),
+  }));
 };
 
 const Detect = () => {
@@ -74,17 +77,25 @@ const Detect = () => {
     const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
     setCapturedImage(dataUrl);
     stopWebcam();
-    runAnalysis();
+    runAnalysis(dataUrl);
   };
 
-  const runAnalysis = () => {
+  const runAnalysis = async (imageData?: string) => {
+    const image = imageData || uploadedImage;
+    if (!image) {
+      toast.error("No image to analyze.");
+      return;
+    }
     setIsAnalyzing(true);
     setResults(null);
-    // Simulated AI analysis
-    setTimeout(() => {
-      setResults(generateRandomResults());
+    try {
+      const emotionResults = await analyzeImage(image);
+      setResults(emotionResults);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to analyze image. Please try again.");
+    } finally {
       setIsAnalyzing(false);
-    }, 1800 + Math.random() * 1200);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,7 +247,7 @@ const Detect = () => {
                       <>
                         <img src={uploadedImage} alt="Uploaded" className="w-full h-full object-contain p-2" />
                         <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-                          <Button onClick={runAnalysis} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
+                          <Button onClick={() => runAnalysis()} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
                             {isAnalyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Detect Emotion</>}
                           </Button>
                           <Button variant="outline" onClick={reset} size="icon" className="h-11 w-11 bg-card/80 backdrop-blur">
