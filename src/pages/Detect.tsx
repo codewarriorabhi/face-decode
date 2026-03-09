@@ -14,21 +14,23 @@ type EmotionResult = {
 
 const EMOTIONS = ["Happy", "Sad", "Angry", "Neutral", "Surprised"];
 
-const generateRandomResults = (): EmotionResult[] => {
-  // Pick a dominant emotion randomly
-  const dominantIdx = Math.floor(Math.random() * EMOTIONS.length);
-  const dominantConfidence = 75 + Math.floor(Math.random() * 20); // 75-94%
-
-  let remaining = 100 - dominantConfidence;
-  const results: EmotionResult[] = EMOTIONS.map((emotion, i) => {
-    if (i === dominantIdx) return { emotion, confidence: dominantConfidence };
-    if (i === EMOTIONS.length - 1) return { emotion, confidence: Math.max(0, remaining) };
-    const share = Math.floor(Math.random() * Math.min(remaining, 15));
-    remaining -= share;
-    return { emotion, confidence: share };
+const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
+  const { data, error } = await supabase.functions.invoke("emotion-detect", {
+    body: { image: imageBase64 },
   });
 
-  return results.sort((a, b) => b.confidence - a.confidence);
+  if (error) throw new Error(error.message || "Analysis failed");
+  if (data?.error) throw new Error(data.error);
+
+  if (!data?.face_detected) {
+    toast.warning("No face detected in the image. Try a clearer photo.");
+  }
+
+  // Map API response to our format (API returns 0-1, we want 0-100)
+  return (data.all_emotions || []).map((e: { emotion: string; confidence: number }) => ({
+    emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
+    confidence: Math.round(e.confidence * 100),
+  }));
 };
 
 const Detect = () => {
