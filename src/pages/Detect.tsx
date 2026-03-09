@@ -91,6 +91,19 @@ const Detect = () => {
     try {
       const emotionResults = await analyzeImage(image);
       setResults(emotionResults);
+
+      // Save dominant result to database
+      if (emotionResults.length > 0) {
+        const dominant = emotionResults[0];
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("emotion_history").insert({
+            user_id: user.id,
+            emotion: dominant.emotion.toLowerCase(),
+            confidence: dominant.confidence / 100,
+          });
+        }
+      }
     } catch (err: any) {
       toast.error(err.message || "Failed to analyze image. Please try again.");
     } finally {
