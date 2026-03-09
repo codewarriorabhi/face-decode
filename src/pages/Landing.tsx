@@ -1,80 +1,128 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, Camera, Upload, BarChart3, Shield, Zap, ArrowRight } from "lucide-react";
+import { Brain, Camera, BarChart3, Clock, Code2, ArrowRight, Check, Scan, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 
 const features = [
-  { icon: Camera, title: "Real-Time Detection", description: "Analyze emotions from your webcam feed with instant AI-powered recognition." },
-  { icon: Upload, title: "Image Upload", description: "Upload any photo to detect emotions across multiple faces simultaneously." },
-  { icon: BarChart3, title: "Analytics Dashboard", description: "Track emotion patterns over time with beautiful visualizations." },
-  { icon: Shield, title: "Privacy First", description: "All processing happens securely. Your data stays private and encrypted." },
-  { icon: Zap, title: "Lightning Fast", description: "Get results in milliseconds with our optimized AI inference pipeline." },
-  { icon: Brain, title: "7 Core Emotions", description: "Detect happiness, sadness, anger, surprise, fear, disgust, and neutral states." },
+  { icon: Camera, title: "Real-Time Emotion Detection", description: "Instantly analyze facial expressions through your webcam with sub-second latency and high accuracy." },
+  { icon: BarChart3, title: "AI-Powered Analytics", description: "Deep insights into emotional patterns with interactive dashboards and trend visualizations." },
+  { icon: Clock, title: "Emotion History Tracking", description: "Comprehensive logs of every detection session, searchable and filterable by date or emotion." },
+  { icon: Code2, title: "API Integration", description: "RESTful API with SDKs for Python, JavaScript, and Go. Integrate emotion detection into any workflow." },
 ];
 
 const steps = [
-  { num: "01", title: "Capture", description: "Use your webcam or upload an image for analysis." },
-  { num: "02", title: "Analyze", description: "Our AI model processes facial expressions in real-time." },
-  { num: "03", title: "Results", description: "View detailed emotion breakdown with confidence scores." },
+  { num: "01", icon: Camera, title: "Open Camera", description: "Grant webcam access or upload a photo. Our interface works across all modern browsers and devices." },
+  { num: "02", icon: Scan, title: "AI Detects Face", description: "Our neural network identifies facial landmarks and maps micro-expressions in real time." },
+  { num: "03", icon: Sparkles, title: "Emotion is Predicted", description: "Get instant results with confidence scores for 7 core emotions — happy, sad, angry, surprise, fear, disgust, neutral." },
 ];
+
+const plans = [
+  {
+    name: "Free",
+    price: "$0",
+    period: "forever",
+    description: "For exploring and personal use.",
+    features: ["50 detections/month", "Webcam detection", "Basic emotion results", "Community support"],
+    cta: "Get Started",
+    highlighted: false,
+  },
+  {
+    name: "Pro",
+    price: "$19",
+    period: "/month",
+    description: "For professionals and small teams.",
+    features: ["Unlimited detections", "Image upload analysis", "Full analytics dashboard", "Emotion history & export", "Priority support", "API access"],
+    cta: "Start Pro Trial",
+    highlighted: true,
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    period: "",
+    description: "For organizations at scale.",
+    features: ["Everything in Pro", "Dedicated infrastructure", "Custom AI model tuning", "SSO & team management", "SLA & 24/7 support", "On-premise deployment"],
+    cta: "Contact Sales",
+    highlighted: false,
+  },
+];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+};
 
 const Landing = () => (
   <div className="min-h-screen bg-background">
     <Navbar />
 
-    {/* Hero */}
-    <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)]" />
-      <div className="container mx-auto relative">
+    {/* ─── Hero ─── */}
+    <section className="relative pt-36 pb-24 px-4 overflow-hidden">
+      {/* Subtle radial glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,hsl(var(--primary)/0.09),transparent)]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" />
+
+      <div className="container mx-auto relative max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto"
+          transition={{ duration: 0.7 }}
+          className="text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-            <Zap className="w-3.5 h-3.5" /> Powered by Advanced AI
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-secondary/60 text-sm text-muted-foreground mb-8">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            Now with real-time multi-face detection
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold leading-tight mb-6">
-            Understand Emotions with{" "}
-            <span className="gradient-text">EmotionAI</span>
+
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.08] tracking-tight mb-6">
+            Detect Human Emotions{" "}
+            <span className="gradient-text">with AI</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Detect and analyze human emotions from facial expressions using cutting-edge AI. 
-            Real-time webcam analysis and image uploads for instant insights.
+
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            Real-time facial emotion detection using advanced AI. Understand how people feel — instantly, accurately, privately.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/auth?mode=signup">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8">
-                Start Free <ArrowRight className="w-4 h-4" />
+            <Link to="/detect">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
+                Try Emotion Detection <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link to="/detect">
-              <Button size="lg" variant="outline" className="gap-2 px-8">
-                Try Demo
+            <Link to="/auth?mode=signup">
+              <Button size="lg" variant="outline" className="gap-2 px-8 h-12 text-base">
+                Create Free Account
               </Button>
             </Link>
           </div>
         </motion.div>
 
-        {/* Hero visual */}
+        {/* Hero preview card */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-16 max-w-4xl mx-auto"
+          transition={{ delay: 0.35, duration: 0.7 }}
+          className="mt-20"
         >
-          <div className="glass-card rounded-2xl p-6 glow-border">
-            <div className="bg-secondary/50 rounded-xl aspect-video flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
+          <div className="glass-card rounded-2xl p-1 glow-border">
+            <div className="bg-secondary/40 rounded-xl aspect-[16/8] flex items-center justify-center relative overflow-hidden">
+              {/* Decorative grid */}
+              <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:48px_48px]" />
+              <div className="relative text-center z-10">
+                <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5 animate-pulse-glow">
                   <Brain className="w-10 h-10 text-primary" />
                 </div>
-                <p className="text-muted-foreground font-medium">Live Emotion Detection Preview</p>
-                <div className="flex gap-2 justify-center mt-4 flex-wrap">
-                  {["😊 Happy 72%", "😲 Surprise 18%", "😐 Neutral 10%"].map((e) => (
-                    <span key={e} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">{e}</span>
+                <p className="text-foreground font-display font-semibold text-lg mb-4">Live Analysis Preview</p>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  {[
+                    { label: "😊 Happy", value: "72%" },
+                    { label: "😲 Surprise", value: "18%" },
+                    { label: "😐 Neutral", value: "10%" },
+                  ].map((e) => (
+                    <span key={e.label} className="px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium">
+                      {e.label} <span className="text-primary ml-1">{e.value}</span>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -84,93 +132,169 @@ const Landing = () => (
       </div>
     </section>
 
-    {/* Features */}
-    <section id="features" className="py-20 px-4">
-      <div className="container mx-auto">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mb-14"
-        >
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Powerful Features</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">Everything you need to understand emotions at scale.</p>
+    {/* ─── Features ─── */}
+    <section id="features" className="py-24 px-4">
+      <div className="container mx-auto max-w-5xl">
+        <motion.div {...fadeUp} className="text-center mb-16">
+          <p className="text-sm uppercase tracking-widest text-primary font-medium mb-3">Features</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Everything you need for emotion intelligence</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            A complete platform for detecting, analyzing, and understanding human emotions at scale.
+          </p>
         </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div className="grid sm:grid-cols-2 gap-5">
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              {...fadeUp}
               transition={{ delay: i * 0.08 }}
-              className="glass-card rounded-xl p-6 hover:glow-border transition-shadow"
+              className="group glass-card rounded-xl p-7 hover:glow-border transition-all duration-300"
             >
-              <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/15 transition-colors">
                 <f.icon className="w-5 h-5 text-primary" />
               </div>
               <h3 className="font-display font-semibold text-lg mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground">{f.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
 
-    {/* How it works */}
-    <section id="how-it-works" className="py-20 px-4 bg-secondary/30">
-      <div className="container mx-auto">
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">How It Works</h2>
-          <p className="text-muted-foreground">Three simple steps to emotion insights.</p>
+    {/* ─── How It Works ─── */}
+    <section id="how-it-works" className="py-24 px-4 bg-secondary/30">
+      <div className="container mx-auto max-w-4xl">
+        <motion.div {...fadeUp} className="text-center mb-16">
+          <p className="text-sm uppercase tracking-widest text-primary font-medium mb-3">How It Works</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Three steps to emotion insight</h2>
+          <p className="text-muted-foreground">No setup required. Get results in seconds.</p>
         </motion.div>
-        <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+
+        <div className="grid md:grid-cols-3 gap-8">
           {steps.map((s, i) => (
             <motion.div
               key={s.num}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="text-center"
+              {...fadeUp}
+              transition={{ delay: i * 0.12 }}
+              className="text-center relative"
             >
-              <div className="text-5xl font-display font-bold gradient-text mb-3">{s.num}</div>
-              <h3 className="font-display font-semibold text-xl mb-2">{s.title}</h3>
-              <p className="text-sm text-muted-foreground">{s.description}</p>
+              {/* Connector line */}
+              {i < steps.length - 1 && (
+                <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border" />
+              )}
+              <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-5 relative z-10">
+                <s.icon className="w-7 h-7 text-primary" />
+              </div>
+              <span className="text-xs font-medium text-primary uppercase tracking-wider">Step {s.num}</span>
+              <h3 className="font-display font-semibold text-xl mt-2 mb-2">{s.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
 
-    {/* CTA */}
-    <section className="py-20 px-4">
-      <div className="container mx-auto">
+    {/* ─── Pricing ─── */}
+    <section className="py-24 px-4">
+      <div className="container mx-auto max-w-5xl">
+        <motion.div {...fadeUp} className="text-center mb-16">
+          <p className="text-sm uppercase tracking-widest text-primary font-medium mb-3">Pricing</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Simple, transparent pricing</h2>
+          <p className="text-muted-foreground">Start free. Scale as you grow.</p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {plans.map((plan, i) => (
+            <motion.div
+              key={plan.name}
+              {...fadeUp}
+              transition={{ delay: i * 0.1 }}
+              className={`rounded-xl p-7 flex flex-col ${
+                plan.highlighted
+                  ? "glass-card glow-border ring-1 ring-primary/20 relative"
+                  : "glass-card"
+              }`}
+            >
+              {plan.highlighted && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  Most Popular
+                </span>
+              )}
+              <div className="mb-6">
+                <h3 className="font-display font-semibold text-lg">{plan.name}</h3>
+                <div className="mt-3 flex items-baseline gap-1">
+                  <span className="text-4xl font-display font-bold">{plan.price}</span>
+                  {plan.period && <span className="text-muted-foreground text-sm">{plan.period}</span>}
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
+              </div>
+
+              <ul className="space-y-3 mb-8 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                    <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link to={plan.name === "Enterprise" ? "/auth" : "/auth?mode=signup"}>
+                <Button
+                  className={`w-full ${
+                    plan.highlighted
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : ""
+                  }`}
+                  variant={plan.highlighted ? "default" : "outline"}
+                >
+                  {plan.cta}
+                </Button>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ─── CTA ─── */}
+    <section className="py-24 px-4">
+      <div className="container mx-auto max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="glass-card rounded-2xl p-10 md:p-16 text-center glow-border"
+          {...fadeUp}
+          className="glass-card rounded-2xl p-12 md:p-16 text-center glow-border relative overflow-hidden"
         >
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto mb-8">
-            Join thousands of users analyzing emotions with our AI platform.
-          </p>
-          <Link to="/auth?mode=signup">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8">
-              Create Free Account <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.06),transparent_70%)]" />
+          <div className="relative">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Ready to understand emotions?
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto mb-8 leading-relaxed">
+              Join thousands of researchers, designers, and developers using EmotionAI to unlock emotional intelligence.
+            </p>
+            <Link to="/detect">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
+                Try Emotion Detection <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>
 
-    {/* Footer */}
-    <footer className="border-t border-border py-8 px-4">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    {/* ─── Footer ─── */}
+    <footer className="border-t border-border py-10 px-4">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2">
-          <Brain className="w-5 h-5 text-primary" />
-          <span className="font-display font-semibold">EmotionAI</span>
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <Brain className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-display font-bold text-lg">EmotionAI</span>
+        </div>
+        <div className="flex gap-8 text-sm text-muted-foreground">
+          <a href="#features" className="hover:text-foreground transition-colors">Features</a>
+          <a href="#how-it-works" className="hover:text-foreground transition-colors">How it Works</a>
+          <Link to="/auth" className="hover:text-foreground transition-colors">Login</Link>
         </div>
         <p className="text-sm text-muted-foreground">© 2026 EmotionAI. All rights reserved.</p>
       </div>
