@@ -4,6 +4,7 @@ import { Camera, Upload, X, Loader2, RotateCcw, Video, ImagePlus, Sparkles, Circ
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import EmotionBadge from "@/components/EmotionBadge";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type EmotionResult = {
