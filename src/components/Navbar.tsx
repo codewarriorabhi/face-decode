@@ -1,13 +1,21 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Brain, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { session, signOut } = useAuth();
   const isLanding = location.pathname === "/";
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card">
@@ -21,10 +29,14 @@ const Navbar = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
-          {isLanding ? (
+          {!session ? (
             <>
-              <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
-              <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How it Works</a>
+              {isLanding && (
+                <>
+                  <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
+                  <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How it Works</a>
+                </>
+              )}
               <Link to="/auth">
                 <Button variant="ghost" size="sm">Log In</Button>
               </Link>
@@ -37,9 +49,7 @@ const Navbar = () => {
               <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
               <Link to="/detect" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Detect</Link>
               <Link to="/history" className="text-sm text-muted-foreground hover:text-foreground transition-colors">History</Link>
-              <Link to="/">
-                <Button variant="ghost" size="sm">Log Out</Button>
-              </Link>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>Log Out</Button>
             </>
           )}
         </div>
@@ -60,10 +70,14 @@ const Navbar = () => {
             className="md:hidden glass-card border-t border-border overflow-hidden"
           >
             <div className="flex flex-col gap-2 p-4">
-              {isLanding ? (
+              {!session ? (
                 <>
-                  <a href="#features" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>Features</a>
-                  <a href="#how-it-works" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>How it Works</a>
+                  {isLanding && (
+                    <>
+                      <a href="#features" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>Features</a>
+                      <a href="#how-it-works" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>How it Works</a>
+                    </>
+                  )}
                   <Link to="/auth" onClick={() => setMobileOpen(false)}>
                     <Button variant="ghost" className="w-full">Log In</Button>
                   </Link>
@@ -76,9 +90,7 @@ const Navbar = () => {
                   <Link to="/dashboard" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>Dashboard</Link>
                   <Link to="/detect" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>Detect</Link>
                   <Link to="/history" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>History</Link>
-                  <Link to="/" onClick={() => setMobileOpen(false)}>
-                    <Button variant="ghost" className="w-full">Log Out</Button>
-                  </Link>
+                  <Button variant="ghost" className="w-full" onClick={() => { handleLogout(); setMobileOpen(false); }}>Log Out</Button>
                 </>
               )}
             </div>
