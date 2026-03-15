@@ -139,7 +139,7 @@ const Generate = () => {
               <Sparkles className="w-3.5 h-3.5 text-primary" />
               No account required
             </div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            <h1 className="text-3xl mobile:text-4xl tablet:text-5xl font-display font-bold mb-4">
               Emotion Tracking{" "}
               <span className="gradient-text">Share Link</span>
             </h1>
@@ -215,7 +215,7 @@ const Generate = () => {
                   </Button>
 
                   {/* Features list */}
-                  <div className="mt-10 grid grid-cols-3 gap-4 text-center text-sm">
+                  <div className="mt-10 grid grid-cols-1 mobile:grid-cols-3 gap-4 text-center">
                     {[
                       { icon: Brain, text: "AI-powered detection" },
                       { icon: BarChart3, text: "Live dashboard" },
@@ -279,7 +279,7 @@ const Generate = () => {
                   <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
                     Share via
                   </p>
-                  <div className="grid grid-cols-5 gap-3">
+                  <div className="grid grid-cols-3 tablet:grid-cols-5 gap-3">
                     {SHARE_PLATFORMS.map((platform) => (
                       <button
                         key={platform.name}

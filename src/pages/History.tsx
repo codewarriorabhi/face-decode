@@ -61,7 +61,7 @@ const History = () => {
       <Navbar />
       <main className="pt-20 pb-10 px-4">
         <div className="container mx-auto max-w-4xl">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8 flex flex-col mobile:flex-row mobile:items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl font-display font-bold">Detection History</h1>
               <p className="text-muted-foreground mt-1">Browse your past emotion detections.</p>
@@ -83,10 +83,10 @@ const History = () => {
 
           <div className="glass-card rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-12 gap-4 px-5 py-3 bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-              <div className="col-span-4">Date</div>
-              <div className="col-span-4">Emotion</div>
-              <div className="col-span-4 text-right">Confidence</div>
+            <div className="grid grid-cols-3 mobile:grid-cols-12 gap-4 px-5 py-3 bg-secondary/50 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+              <div className="col-span-3 mobile:col-span-4">Date</div>
+              <div className="col-span-3 mobile:col-span-4">Emotion</div>
+              <div className="col-span-3 mobile:col-span-4 text-right">Confidence</div>
             </div>
 
             {loading ? (
@@ -105,17 +105,17 @@ const History = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.02 }}
-                  className="grid grid-cols-12 gap-4 px-5 py-4 border-b border-border last:border-0 items-center hover:bg-secondary/30 transition-colors"
+                  className="grid grid-cols-3 mobile:grid-cols-12 gap-4 px-5 py-4 border-b border-border last:border-0 items-center hover:bg-secondary/30 transition-colors"
                 >
-                  <div className="col-span-4 flex items-center gap-2 text-sm">
+                  <div className="col-span-3 mobile:col-span-4 flex items-center gap-2 text-sm">
                     <Calendar className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                     <span>{format(new Date(item.date_time), "MMM d, yyyy")}</span>
                     <span className="text-muted-foreground">{format(new Date(item.date_time), "HH:mm")}</span>
                   </div>
-                  <div className="col-span-4">
+                  <div className="col-span-3 mobile:col-span-4">
                     <EmotionBadge emotion={item.emotion} size="sm" />
                   </div>
-                  <div className="col-span-4 text-right">
+                  <div className="col-span-3 mobile:col-span-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <div className="w-20 h-1.5 rounded-full bg-secondary overflow-hidden">
                         <div className="h-full rounded-full bg-primary" style={{ width: `${item.confidence * 100}%` }} />

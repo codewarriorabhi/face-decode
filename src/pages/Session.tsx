@@ -99,7 +99,11 @@ const Session = () => {
     setPhase("requesting-camera");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: 640, height: 480 },
+        video: { 
+          facingMode: "user", 
+          width: { ideal: 640, max: 1280 },
+          height: { ideal: 480, max: 720 }
+        },
       });
       streamRef.current = stream;
       if (videoRef.current) {
@@ -254,7 +258,7 @@ const Session = () => {
               ))}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col mobile:flex-row gap-3">
               <Button
                 onClick={startWebcam}
                 className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
@@ -332,9 +336,9 @@ const Session = () => {
         </div>
       </div>
 
-      <main className="flex-1 pt-14 flex flex-col lg:flex-row overflow-hidden">
+      <main className="flex-1 pt-14 flex flex-col laptop:flex-row overflow-hidden">
         {/* Webcam panel */}
-        <div className="flex-1 relative bg-secondary/30 min-h-[50vh] lg:min-h-0">
+        <div className="flex-1 relative bg-secondary/30 min-h-[50vh] laptop:min-h-0">
           <video
             ref={videoRef}
             autoPlay
@@ -345,7 +349,7 @@ const Session = () => {
 
           {/* Face guide overlay */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-40 h-52 md:w-48 md:h-64 rounded-[50%] border-2 border-dashed border-primary/50" />
+            <div className="w-32 h-40 mobile:w-40 mobile:h-52 tablet:w-48 tablet:h-60 laptop:w-56 laptop:h-72 rounded-[50%] border-2 border-dashed border-primary/50" />
           </div>
 
           {/* Scanning indicator */}
@@ -356,7 +360,7 @@ const Session = () => {
         </div>
 
         {/* Results panel */}
-        <div className="lg:w-80 xl:w-96 bg-background border-t lg:border-t-0 lg:border-l border-border p-5 flex flex-col gap-4 overflow-y-auto">
+        <div className="laptop:w-80 desktop:w-96 bg-background border-t laptop:border-t-0 laptop:border-l border-border p-5 flex flex-col gap-4 overflow-y-auto">
           {/* Current emotion */}
           <div className="glass-card rounded-xl p-5 text-center">
             <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
@@ -371,7 +375,7 @@ const Session = () => {
                   exit={{ scale: 0.8, opacity: 0 }}
                   className="flex flex-col items-center"
                 >
-                  <span className="text-5xl mb-3">
+                  <span className="text-4xl mobile:text-5xl mb-3">
                     {EMOTION_EMOJI[currentEmotion.emotion.toLowerCase()] || "🎭"}
                   </span>
                   <EmotionBadge emotion={currentEmotion.emotion} size="lg" />

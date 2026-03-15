@@ -47,7 +47,13 @@ const Detect = () => {
 
   const startWebcam = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 640, height: 480 } });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: "user", 
+          width: { ideal: 640, max: 1280 },
+          height: { ideal: 480, max: 720 }
+        } 
+      });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setWebcamActive(true);
@@ -160,7 +166,7 @@ const Detect = () => {
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-xs uppercase tracking-widest text-primary font-medium">AI-Powered</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold">Emotion Detection</h1>
+            <h1 className="text-2xl mobile:text-3xl tablet:text-4xl font-display font-bold">Emotion Detection</h1>
             <p className="text-muted-foreground mt-1">Detect facial emotions in real-time via webcam or by uploading a photo.</p>
           </motion.div>
 
@@ -182,17 +188,17 @@ const Detect = () => {
             </Button>
           </motion.div>
 
-          <div className="grid lg:grid-cols-5 gap-6">
+          <div className="grid laptop:grid-cols-5 gap-6">
             {/* ─── Left: Input Area ─── */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.15 }}
-              className="lg:col-span-3"
+              className="laptop:col-span-3"
             >
               <div className="glass-card rounded-2xl overflow-hidden glow-border">
                 {mode === "webcam" ? (
-                  <div className="aspect-video bg-secondary/30 relative flex items-center justify-center overflow-hidden">
+                  <div className="aspect-[4/3] bg-secondary/30 relative flex items-center justify-center overflow-hidden">
                     {/* Live video */}
                     <video
                       ref={videoRef}
@@ -209,7 +215,7 @@ const Detect = () => {
                     {webcamActive && (
                       <>
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="w-48 h-60 md:w-56 md:h-72 rounded-[50%] border-2 border-dashed border-primary/40" />
+                          <div className="w-32 h-40 mobile:w-40 mobile:h-52 tablet:w-48 tablet:h-60 laptop:w-56 laptop:h-72 rounded-[50%] border-2 border-dashed border-primary/40" />
                         </div>
                         <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/90 text-destructive-foreground text-xs font-medium">
                           <CircleDot className="w-3 h-3 animate-pulse" /> LIVE
@@ -231,7 +237,7 @@ const Detect = () => {
                     )}
                     {/* Controls */}
                     {webcamActive && (
-                      <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+                      <div className="absolute bottom-4 left-4 right-4 flex flex-col mobile:flex-row gap-2">
                         <Button onClick={captureFrame} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
                           {isAnalyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Capture & Detect</>}
                         </Button>
@@ -242,7 +248,7 @@ const Detect = () => {
                     )}
                     {/* Recapture */}
                     {capturedImage && !webcamActive && !isAnalyzing && (
-                      <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+                      <div className="absolute bottom-4 left-4 right-4 flex flex-col mobile:flex-row gap-2">
                         <Button onClick={startWebcam} size="lg" variant="outline" className="flex-1 bg-card/80 backdrop-blur gap-2">
                           <RotateCcw className="w-4 h-4" /> Retake
                         </Button>
@@ -251,7 +257,7 @@ const Detect = () => {
                   </div>
                 ) : (
                   <div
-                    className={`aspect-video bg-secondary/30 relative flex items-center justify-center overflow-hidden transition-colors ${dragOver ? "bg-primary/5 ring-2 ring-primary/30 ring-inset" : ""}`}
+                    className={`aspect-[4/3] bg-secondary/30 relative flex items-center justify-center overflow-hidden transition-colors ${dragOver ? "bg-primary/5 ring-2 ring-primary/30 ring-inset" : ""}`}
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
@@ -259,7 +265,7 @@ const Detect = () => {
                     {uploadedImage ? (
                       <>
                         <img src={uploadedImage} alt="Uploaded" className="w-full h-full object-contain p-2" />
-                        <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+                        <div className="absolute bottom-4 left-4 right-4 flex flex-col mobile:flex-row gap-2">
                           <Button onClick={() => runAnalysis()} disabled={isAnalyzing} size="lg" className="flex-1 bg-primary text-primary-foreground gap-2">
                             {isAnalyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Detect Emotion</>}
                           </Button>
@@ -293,7 +299,7 @@ const Detect = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="lg:col-span-2"
+              className="laptop:col-span-2"
             >
               <div className="glass-card rounded-2xl p-6 h-full flex flex-col">
                 <h3 className="font-display font-semibold text-lg mb-1">Detection Results</h3>

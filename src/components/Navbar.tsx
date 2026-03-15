@@ -20,15 +20,15 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
-        <Link to="/" className="flex items-center gap-2">
+        <div onClick={() => window.location.href = "/"} className="flex items-center gap-2 cursor-pointer">
           <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
             <Brain className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="font-display text-xl font-bold">EmotionAI</span>
-        </Link>
+        </div>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden tablet:flex items-center gap-6">
           {!session ? (
             <>
               {isLanding && (
@@ -56,7 +56,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+        <button className="tablet:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -68,7 +68,7 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden glass-card border-t border-border overflow-hidden"
+            className="tablet:hidden glass-card border-t border-border overflow-hidden"
           >
             <div className="flex flex-col gap-2 p-4">
               {!session ? (

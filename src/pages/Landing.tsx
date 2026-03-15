@@ -58,7 +58,7 @@ const Landing = () => (
     <Navbar />
 
     {/* ─── Hero ─── */}
-    <section className="relative pt-36 pb-24 px-4 overflow-hidden">
+    <section className="relative pt-24 mobile:pt-36 pb-24 px-4 overflow-hidden">
       {/* Subtle radial glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,hsl(var(--primary)/0.09),transparent)]" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" />
@@ -75,16 +75,16 @@ const Landing = () => (
             Now with real-time multi-face detection
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.08] tracking-tight mb-6">
+          <h1 className="text-3xl mobile:text-4xl tablet:text-5xl laptop:text-6xl desktop:text-7xl font-display font-bold leading-[1.08] tracking-tight mb-6">
             Detect Human Emotions{" "}
             <span className="gradient-text">with AI</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-base mobile:text-lg tablet:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
             Real-time facial emotion detection using advanced AI. Understand how people feel — instantly, accurately, privately.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col mobile:flex-row gap-3 justify-center">
             <Link to="/generate">
               <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
                 Generate Share Link <ArrowRight className="w-4 h-4" />
@@ -143,7 +143,7 @@ const Landing = () => (
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="grid mobile:grid-cols-2 gap-5">
           {features.map((f, i) => (
             <motion.div
               key={f.title}
@@ -171,7 +171,7 @@ const Landing = () => (
           <p className="text-muted-foreground">No setup required. Get results in seconds.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid tablet:grid-cols-3 gap-8">
           {steps.map((s, i) => (
             <motion.div
               key={s.num}
@@ -181,7 +181,7 @@ const Landing = () => (
             >
               {/* Connector line */}
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border" />
+                <div className="hidden tablet:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border" />
               )}
               <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-5 relative z-10">
                 <s.icon className="w-7 h-7 text-primary" />
@@ -200,7 +200,7 @@ const Landing = () => (
       <div className="container mx-auto max-w-5xl">
         <motion.div {...fadeUp} className="text-center mb-16">
           <p className="text-sm uppercase tracking-widest text-primary font-medium mb-3">Pricing</p>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Simple, transparent pricing</h2>
+          <h2 className="text-2xl mobile:text-3xl tablet:text-4xl font-display font-bold mb-4">Simple, transparent pricing</h2>
           <p className="text-muted-foreground">Start free. Scale as you grow.</p>
         </motion.div>
 

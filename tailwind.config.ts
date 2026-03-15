@@ -12,6 +12,12 @@ export default {
         "2xl": "1400px",
       },
     },
+    screens: {
+      'mobile': '320px',
+      'tablet': '481px',
+      'laptop': '769px',
+      'desktop': '1025px',
+    },
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif"],

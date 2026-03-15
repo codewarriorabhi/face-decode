@@ -99,20 +99,20 @@ const Dashboard = () => {
           </motion.div>
 
           {/* Stats */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid mobile:grid-cols-2 laptop:grid-cols-4 gap-4 mb-8">
             <StatCard title="Total Scans" value={totalScans} change={`+${todayScans} today`} icon={Camera} delay={0} />
             <StatCard title="Today's Scans" value={todayScans} icon={Image} delay={0.05} />
             <StatCard title="Dominant Emotion" value={dominantEmotion.charAt(0).toUpperCase() + dominantEmotion.slice(1)} icon={TrendingUp} delay={0.1} />
             <StatCard title="Avg. Confidence" value={`${avgConfidence}%`} icon={Clock} delay={0.15} />
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid laptop:grid-cols-3 gap-6">
             {/* Chart */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="lg:col-span-2 glass-card rounded-xl p-5"
+              className="laptop:col-span-2 glass-card rounded-xl p-5"
             >
               <h3 className="font-display font-semibold mb-4">Emotion Distribution</h3>
               {chartData.length > 0 ? (
@@ -173,7 +173,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-8 flex flex-col sm:flex-row gap-4"
+            className="mt-8 flex flex-col mobile:flex-row gap-4"
           >
             <Link to="/detect" className="flex-1">
               <div className="glass-card rounded-xl p-6 hover:glow-border transition-shadow cursor-pointer">

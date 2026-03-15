@@ -105,7 +105,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left panel */}
-      <div className="hidden lg:flex flex-1 relative overflow-hidden items-center justify-center bg-secondary/30">
+      <div className="hidden laptop:flex flex-1 relative overflow-hidden items-center justify-center bg-secondary/30">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.1),transparent_70%)]" />
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative text-center p-12">
           <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 animate-float">
@@ -121,7 +121,7 @@ const Auth = () => {
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="w-full max-w-md">
-          <Link to="/" className="flex items-center gap-2 mb-10 lg:hidden">
+          <Link to="/" className="flex items-center gap-2 mb-10 laptop:hidden">
             <Brain className="w-7 h-7 text-primary" />
             <span className="font-display text-xl font-bold">EmotionAI</span>
           </Link>
@@ -131,7 +131,7 @@ const Auth = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 tablet:grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
                   <div className="relative">
