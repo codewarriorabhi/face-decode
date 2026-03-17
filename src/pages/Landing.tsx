@@ -86,12 +86,12 @@ const Landing = () => (
 
           <div className="flex flex-col mobile:flex-row gap-3 justify-center">
             <Link to="/generate">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 w-full px-4 py-3 mobile:px-6 mobile:py-3 tablet:px-8 tablet:h-12 text-base">
                 Generate Share Link <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
             <Link to="/detect">
-              <Button size="lg" variant="outline" className="gap-2 px-8 h-12 text-base">
+              <Button size="lg" variant="outline" className="gap-2 w-full px-4 py-3 mobile:px-6 mobile:py-3 tablet:px-8 tablet:h-12 text-base">
                 Try Emotion Detection
               </Button>
             </Link>
@@ -106,7 +106,7 @@ const Landing = () => (
           className="mt-20"
         >
           <div className="glass-card rounded-2xl p-1 glow-border">
-            <div className="bg-secondary/40 rounded-xl aspect-[16/8] flex items-center justify-center relative overflow-hidden">
+            <div className="bg-secondary/40 rounded-xl aspect-[4/3] laptop:aspect-[16/8] flex items-center justify-center relative overflow-hidden">
               {/* Decorative grid */}
               <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:48px_48px]" />
               <div className="relative text-center z-10">
@@ -143,16 +143,16 @@ const Landing = () => (
           </p>
         </motion.div>
 
-        <div className="grid mobile:grid-cols-2 gap-5">
+        <div className="grid mobile:grid-cols-2 gap-3 mobile:gap-4 tablet:gap-5">
           {features.map((f, i) => (
             <motion.div
               key={f.title}
               {...fadeUp}
               transition={{ delay: i * 0.08 }}
-              className="group glass-card rounded-xl p-7 hover:glow-border transition-all duration-300"
+              className="group glass-card rounded-xl p-4 mobile:p-5 tablet:p-6 laptop:p-7 hover:glow-border transition-all duration-300"
             >
-              <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/15 transition-colors">
-                <f.icon className="w-5 h-5 text-primary" />
+              <div className="w-9 h-9 mobile:w-10 mobile:h-10 tablet:w-11 tablet:h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/15 transition-colors">
+                <f.icon className="w-4 h-4 mobile:w-5 mobile:h-5 text-primary" />
               </div>
               <h3 className="font-display font-semibold text-lg mb-2">{f.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
@@ -171,7 +171,7 @@ const Landing = () => (
           <p className="text-muted-foreground">No setup required. Get results in seconds.</p>
         </motion.div>
 
-        <div className="grid tablet:grid-cols-3 gap-8">
+        <div className="grid tablet:grid-cols-3 gap-4 mobile:gap-6 tablet:gap-8">
           {steps.map((s, i) => (
             <motion.div
               key={s.num}
@@ -183,8 +183,8 @@ const Landing = () => (
               {i < steps.length - 1 && (
                 <div className="hidden tablet:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border" />
               )}
-              <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-5 relative z-10">
-                <s.icon className="w-7 h-7 text-primary" />
+              <div className="w-12 h-12 mobile:w-14 mobile:h-14 tablet:w-16 tablet:h-16 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-5 relative z-10">
+                <s.icon className="w-6 h-6 mobile:w-7 mobile:h-7 text-primary" />
               </div>
               <span className="text-xs font-medium text-primary uppercase tracking-wider">Step {s.num}</span>
               <h3 className="font-display font-semibold text-xl mt-2 mb-2">{s.title}</h3>
@@ -204,13 +204,13 @@ const Landing = () => (
           <p className="text-muted-foreground">Start free. Scale as you grow.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid tablet:grid-cols-3 gap-3 mobile:gap-4 tablet:gap-6">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
               {...fadeUp}
               transition={{ delay: i * 0.1 }}
-              className={`rounded-xl p-7 flex flex-col ${
+              className={`rounded-xl p-4 mobile:p-5 tablet:p-6 laptop:p-7 flex flex-col ${
                 plan.highlighted
                   ? "glass-card glow-border ring-1 ring-primary/20 relative"
                   : "glass-card"
@@ -262,7 +262,7 @@ const Landing = () => (
       <div className="container mx-auto max-w-3xl">
         <motion.div
           {...fadeUp}
-          className="glass-card rounded-2xl p-12 md:p-16 text-center glow-border relative overflow-hidden"
+          className="glass-card rounded-2xl p-6 mobile:p-8 tablet:p-12 laptop:p-16 text-center glow-border relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.06),transparent_70%)]" />
           <div className="relative">
@@ -273,7 +273,7 @@ const Landing = () => (
               Join thousands of researchers, designers, and developers using EmotionAI to unlock emotional intelligence.
             </p>
             <Link to="/detect">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 px-8 h-12 text-base">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 w-full px-4 py-3 mobile:px-6 mobile:py-3 tablet:px-8 tablet:h-12 text-base">
                 Try Emotion Detection <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -284,7 +284,7 @@ const Landing = () => (
 
     {/* ─── Footer ─── */}
     <footer className="border-t border-border py-10 px-4">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="container mx-auto flex flex-col tablet:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <Brain className="w-4 h-4 text-primary-foreground" />

@@ -203,7 +203,7 @@ const Detect = () => {
             </Button>
           </motion.div>
 
-          <div className="grid laptop:grid-cols-5 gap-6">
+          <div className="grid laptop:grid-cols-5 gap-3 mobile:gap-4 tablet:gap-6">
             {/* ─── Left: Input Area ─── */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -316,7 +316,7 @@ const Detect = () => {
               transition={{ delay: 0.2 }}
               className="laptop:col-span-2"
             >
-              <div className="glass-card rounded-2xl p-6 h-full flex flex-col">
+              <div className="glass-card rounded-2xl p-4 mobile:p-5 tablet:p-6 h-full flex flex-col">
                 <h3 className="font-display font-semibold text-lg mb-1">Detection Results</h3>
                 <p className="text-xs text-muted-foreground mb-5">Confidence scores for detected emotions</p>
 
@@ -426,7 +426,7 @@ const Detect = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-8 glass-card rounded-xl p-5"
+            className="mt-8 glass-card rounded-xl p-3 mobile:p-4 tablet:p-5"
           >
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">Supported Emotions</p>
             <div className="flex flex-wrap gap-2">
