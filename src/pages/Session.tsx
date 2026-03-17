@@ -106,15 +106,35 @@ const Session = () => {
         },
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        setPhase("detecting");
-      }
+      setPhase("detecting");
     } catch {
       toast.error("Camera access denied. Please allow camera permissions to continue.");
       setPhase("consent");
     }
   }, []);
+
+  // Attach the acquired stream to the video element when it becomes available.
+  useEffect(() => {
+    if (phase !== "detecting") return;
+    const stream = streamRef.current;
+    const video = videoRef.current;
+    if (!stream || !video) return;
+
+    if (video.srcObject !== stream) {
+      video.srcObject = stream;
+    }
+
+    // Some browsers require an explicit play() call even when autoPlay is set.
+    const playVideo = async () => {
+      try {
+        await video.play();
+      } catch (e) {
+        // Ignore; user agent may block autoplay without user interaction.
+      }
+    };
+
+    void playVideo();
+  }, [phase]);
 
   const runDetection = useCallback(async () => {
     if (isDetectingRef.current || !videoRef.current || !canvasRef.current) return;

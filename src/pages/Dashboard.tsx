@@ -8,6 +8,7 @@ import StatCard from "@/components/StatCard";
 import EmotionBadge from "@/components/EmotionBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { toast } from "sonner";
 import { format } from "date-fns";
 
 const EMOTION_COLORS: Record<string, string> = {
@@ -31,13 +32,25 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const { data } = await supabase
-        .from("emotion_history")
-        .select("id, emotion, confidence, date_time")
-        .order("date_time", { ascending: false })
-        .limit(200);
-      if (data) setHistory(data);
-      setLoading(false);
+      try {
+        const { data, error } = await supabase
+          .from("emotion_history")
+          .select("id, emotion, confidence, date_time")
+          .order("date_time", { ascending: false })
+          .limit(200);
+        
+        if (error) {
+          console.error("Error fetching emotion history:", error);
+          toast.error("Failed to load emotion history");
+        } else {
+          console.log("Fetched emotion history:", data);
+          if (data) setHistory(data);
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching history:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchHistory();
   }, []);

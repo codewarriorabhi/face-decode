@@ -92,6 +92,10 @@ const Generate = () => {
       if (error) throw error;
       setSessionId(newId);
       setPhase("generated");
+
+      // Automatically open the tracking link so the user can immediately see the camera view.
+      const redirectUrl = `${window.location.origin}/session/${newId}`;
+      window.open(redirectUrl, "_blank");
     } catch (err: any) {
       toast.error("Failed to generate link. Please try again.");
       setPhase("initial");

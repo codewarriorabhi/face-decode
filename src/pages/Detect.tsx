@@ -101,13 +101,28 @@ const Detect = () => {
       // Save dominant result to database
       if (emotionResults.length > 0) {
         const dominant = emotionResults[0];
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        console.log("Auth check result:", { user: user?.id, authError });
         if (user) {
-          await supabase.from("emotion_history").insert({
-            user_id: user.id,
-            emotion: dominant.emotion.toLowerCase(),
-            confidence: dominant.confidence / 100,
-          });
+          try {
+            const { error: insertError } = await supabase.from("emotion_history").insert({
+              user_id: user.id,
+              emotion: dominant.emotion.toLowerCase(),
+              confidence: dominant.confidence / 100,
+            });
+            if (insertError) {
+              console.error("Database insert error:", insertError);
+              toast.error("Detection completed but failed to save data. Please try again.");
+            } else {
+              console.log("Emotion data saved successfully");
+            }
+          } catch (dbError: any) {
+            console.error("Failed to save emotion data:", dbError);
+            toast.error("Detection completed but failed to save data. Please try again.");
+          }
+        } else {
+          console.warn("User not authenticated, skipping database save");
+          toast.warning("Please log in to save your emotion detection history.");
         }
       }
     } catch (err: any) {
