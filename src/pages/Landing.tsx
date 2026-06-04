@@ -17,35 +17,6 @@ const steps = [
   { num: "03", icon: Sparkles, title: "Emotion is Predicted", description: "Get instant results with confidence scores for 7 core emotions — happy, sad, angry, surprise, fear, disgust, neutral." },
 ];
 
-const plans = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "For exploring and personal use.",
-    features: ["50 detections/month", "Webcam detection", "Basic emotion results", "Community support"],
-    cta: "Get Started",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    price: "$19",
-    period: "/month",
-    description: "For professionals and small teams.",
-    features: ["Unlimited detections", "Image upload analysis", "Full analytics dashboard", "Emotion history & export", "Priority support", "API access"],
-    cta: "Start Pro Trial",
-    highlighted: true,
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    period: "",
-    description: "For organizations at scale.",
-    features: ["Everything in Pro", "Dedicated infrastructure", "Custom AI model tuning", "SSO & team management", "SLA & 24/7 support", "On-premise deployment"],
-    cta: "Contact Sales",
-    highlighted: false,
-  },
-];
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
