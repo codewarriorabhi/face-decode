@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, Camera, BarChart3, Clock, Code2, ArrowRight, Check, Scan, Sparkles } from "lucide-react";
+import { Brain, Camera, BarChart3, Clock, Code2, ArrowRight, Scan, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 
