@@ -356,121 +356,60 @@ const Session = () => {
         </div>
       </div>
 
-      <main className="flex-1 pt-14 flex flex-col laptop:flex-row overflow-hidden">
-        {/* Webcam panel */}
-        <div className="flex-1 relative bg-secondary/30 min-h-[50vh] laptop:min-h-0">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
+      <main className="flex-1 pt-14 flex items-center justify-center overflow-hidden px-4 py-8">
+        {/* Hidden webcam — capture only, never displayed */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          className="hidden"
+        />
 
-          {/* Face guide overlay */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-32 h-40 mobile:w-40 mobile:h-52 tablet:w-48 tablet:h-60 laptop:w-56 laptop:h-72 rounded-[50%] border-2 border-dashed border-primary/50" />
-          </div>
-
-          {/* Scanning indicator */}
-          <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/90 backdrop-blur text-xs font-medium border border-border">
-            <Scan className="w-3.5 h-3.5 text-primary animate-pulse" />
-            Scanning every 3s
-          </div>
-        </div>
-
-        {/* Results panel */}
-        <div className="laptop:w-80 desktop:w-96 bg-background border-t laptop:border-t-0 laptop:border-l border-border p-5 flex flex-col gap-4 overflow-y-auto">
-          {/* Current emotion */}
-          <div className="glass-card rounded-xl p-5 text-center">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-              Current Emotion
-            </p>
-            <AnimatePresence mode="wait">
-              {currentEmotion ? (
-                <motion.div
-                  key={currentEmotion.emotion}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.8, opacity: 0 }}
-                  className="flex flex-col items-center"
-                >
-                  <span className="text-4xl mobile:text-5xl mb-3">
-                    {EMOTION_EMOJI[currentEmotion.emotion.toLowerCase()] || "🎭"}
-                  </span>
-                  <EmotionBadge emotion={currentEmotion.emotion} size="lg" />
-                  <div className="mt-3">
-                    <span className="text-3xl font-display font-bold text-primary">
-                      {currentEmotion.confidence}%
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-0.5">Confidence</p>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="waiting"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="py-4"
-                >
-                  <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                    <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">Detecting emotions…</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Stats */}
-          <div className="glass-card rounded-xl p-4">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Total Detections</span>
-              <span className="font-display font-bold text-primary">{totalDetections}</span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card rounded-2xl p-8 mobile:p-10 max-w-md w-full text-center glow-border"
+        >
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+            <div className="relative w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+              <Scan className="w-10 h-10 text-primary animate-pulse" />
             </div>
           </div>
 
-          {/* Recent emotions */}
-          {recentEmotions.length > 0 && (
-            <div className="glass-card rounded-xl p-4">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mb-3">
-                Recent
+          <h2 className="text-2xl font-display font-bold mb-2">Tracking Active</h2>
+          <p className="text-muted-foreground text-sm mb-6">
+            Your camera is on. Emotion reactions are sent to the host in real time. Your video is never displayed or stored.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            <div className="rounded-xl bg-secondary/50 p-3">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                Detections
               </p>
-              <div className="space-y-2">
-                {recentEmotions.map((e, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-2"
-                  >
-                    <span className="text-lg">{EMOTION_EMOJI[e.emotion.toLowerCase()] || "🎭"}</span>
-                    <EmotionBadge emotion={e.emotion} size="sm" />
-                    <div className="flex-1">
-                      <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-primary/60"
-                          style={{ width: `${e.confidence}%` }}
-                        />
-                      </div>
-                    </div>
-                    <span className="text-xs text-muted-foreground font-mono w-9 text-right">
-                      {e.confidence}%
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
+              <p className="text-2xl font-display font-bold text-primary">{totalDetections}</p>
             </div>
-          )}
+            <div className="rounded-xl bg-secondary/50 p-3">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                Time Left
+              </p>
+              <p className="text-2xl font-display font-bold text-primary">{timeRemaining || "—"}</p>
+            </div>
+          </div>
 
-          {/* Privacy notice */}
-          <div className="flex items-start gap-2 p-3 rounded-xl bg-secondary/40 border border-border">
+          <div className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-secondary/40 border border-border text-xs text-muted-foreground">
+            <CircleDot className="w-3 h-3 text-destructive animate-pulse" />
+            Live • Scanning every 3s
+          </div>
+
+          <div className="flex items-start gap-2 mt-5 p-3 rounded-xl bg-secondary/40 border border-border text-left">
             <Shield className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground">
-              No identity data is stored. Only emotion labels. Session ends automatically.
+              No video or identity data is stored. Only emotion labels are sent to the host.
             </p>
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   );
