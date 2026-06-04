@@ -166,67 +166,6 @@ const Landing = () => (
       </div>
     </section>
 
-    {/* ─── Pricing ─── */}
-    <section className="py-24 px-4">
-      <div className="container mx-auto max-w-5xl">
-        <motion.div {...fadeUp} className="text-center mb-16">
-          <p className="text-sm uppercase tracking-widest text-primary font-medium mb-3">Pricing</p>
-          <h2 className="text-2xl mobile:text-3xl tablet:text-4xl font-display font-bold mb-4">Simple, transparent pricing</h2>
-          <p className="text-muted-foreground">Start free. Scale as you grow.</p>
-        </motion.div>
-
-        <div className="grid tablet:grid-cols-3 gap-3 mobile:gap-4 tablet:gap-6">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              {...fadeUp}
-              transition={{ delay: i * 0.1 }}
-              className={`rounded-xl p-4 mobile:p-5 tablet:p-6 laptop:p-7 flex flex-col ${
-                plan.highlighted
-                  ? "glass-card glow-border ring-1 ring-primary/20 relative"
-                  : "glass-card"
-              }`}
-            >
-              {plan.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                  Most Popular
-                </span>
-              )}
-              <div className="mb-6">
-                <h3 className="font-display font-semibold text-lg">{plan.name}</h3>
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-4xl font-display font-bold">{plan.price}</span>
-                  {plan.period && <span className="text-muted-foreground text-sm">{plan.period}</span>}
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-              </div>
-
-              <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link to={plan.name === "Enterprise" ? "/auth" : "/auth?mode=signup"}>
-                <Button
-                  className={`w-full ${
-                    plan.highlighted
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : ""
-                  }`}
-                  variant={plan.highlighted ? "default" : "outline"}
-                >
-                  {plan.cta}
-                </Button>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
 
     {/* ─── CTA ─── */}
     <section className="py-24 px-4">
