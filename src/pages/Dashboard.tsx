@@ -29,10 +29,14 @@ interface HistoryRow {
 const Dashboard = () => {
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUserId(user?.id ?? null);
+
         const { data, error } = await supabase
           .from("emotion_history")
           .select("id, emotion, confidence, date_time")
@@ -43,7 +47,6 @@ const Dashboard = () => {
           console.error("Error fetching emotion history:", error);
           toast.error("Failed to load emotion history");
         } else {
-          console.log("Fetched emotion history:", data);
           if (data) setHistory(data);
         }
       } catch (err) {
@@ -54,6 +57,30 @@ const Dashboard = () => {
     };
     fetchHistory();
   }, []);
+
+  // Realtime: stream new detections as they're inserted
+  useEffect(() => {
+    if (!userId) return;
+    const channel = supabase
+      .channel(`dashboard-history-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "emotion_history",
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          const row = payload.new as HistoryRow;
+          setHistory((prev) => [row, ...prev].slice(0, 200));
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [userId]);
+
 
   const totalScans = history.length;
   const todayScans = history.filter((h) => {
