@@ -409,7 +409,7 @@ const Session = () => {
               No video or identity data is stored. Only emotion labels are sent to the host.
             </p>
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   );
