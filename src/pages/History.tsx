@@ -28,9 +28,9 @@ const History = () => {
 
   const fetchHistory = async () => {
     setLoading(true);
-    let query = supabase
+    let query = (supabase as any)
       .from("emotion_history")
-      .select("id, emotion, confidence, date_time")
+      .select("id, emotion, confidence, date_time, latency_ms")
       .order("date_time", { ascending: false });
 
     const now = new Date();
@@ -112,6 +112,9 @@ const History = () => {
                     <Calendar className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                     <span>{format(new Date(item.date_time), "MMM d, yyyy")}</span>
                     <span className="text-muted-foreground">{format(new Date(item.date_time), "HH:mm")}</span>
+                    {item.latency_ms !== null && item.latency_ms !== undefined && (
+                      <span className="text-[10px] text-muted-foreground/70 ml-1">({item.latency_ms}ms)</span>
+                    )}
                   </div>
                   <div className="col-span-3 mobile:col-span-4">
                     <EmotionBadge emotion={item.emotion} size="sm" />

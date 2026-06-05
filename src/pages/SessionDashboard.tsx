@@ -20,6 +20,7 @@ type EmotionEntry = {
   emotion: string;
   confidence: number;
   date_time: string;
+  latency_ms: number | null;
 };
 
 type Phase = "loading" | "invalid" | "live" | "expired";
