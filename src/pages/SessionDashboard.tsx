@@ -61,7 +61,7 @@ const SessionDashboard = () => {
         (supabase as any).from("sessions").select("*").eq("session_id", sessionId).single(),
         (supabase as any)
           .from("emotion_history")
-          .select("*")
+          .select("id, emotion, confidence, date_time, latency_ms")
           .filter("session_id", "eq", sessionId)
           .order("date_time", { ascending: true }),
       ]);
@@ -348,6 +348,9 @@ const SessionDashboard = () => {
                       </div>
                       <p className="text-xs text-muted-foreground">
                         {format(new Date(latestEmotion.date_time), "HH:mm:ss")}
+                        {latestEmotion.latency_ms !== null && latestEmotion.latency_ms !== undefined && (
+                          <> · {latestEmotion.latency_ms}ms</>
+                        )}
                       </p>
                     </div>
                     {phase === "live" && (
@@ -512,6 +515,9 @@ const SessionDashboard = () => {
                           <p className="text-xs font-medium capitalize">{entry.emotion}</p>
                           <p className="text-[10px] text-muted-foreground">
                             {format(new Date(entry.date_time), "HH:mm:ss")}
+                            {entry.latency_ms !== null && entry.latency_ms !== undefined && (
+                              <> · {entry.latency_ms}ms</>
+                            )}
                           </p>
                         </div>
                         <span className="text-xs font-mono font-semibold text-primary">
