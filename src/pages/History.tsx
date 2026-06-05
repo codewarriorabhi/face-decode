@@ -14,6 +14,7 @@ interface HistoryRow {
   emotion: string;
   confidence: number;
   date_time: string;
+  latency_ms: number | null;
 }
 
 const History = () => {
