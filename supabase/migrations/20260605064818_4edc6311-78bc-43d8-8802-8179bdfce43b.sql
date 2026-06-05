@@ -1,0 +1,1 @@
+ALTER TABLE public.emotion_history ADD COLUMN IF NOT EXISTS latency_ms integer;

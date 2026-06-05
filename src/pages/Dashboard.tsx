@@ -24,6 +24,7 @@ interface HistoryRow {
   emotion: string;
   confidence: number;
   date_time: string;
+  latency_ms: number | null;
 }
 
 const Dashboard = () => {
@@ -37,9 +38,9 @@ const Dashboard = () => {
         const { data: { user } } = await supabase.auth.getUser();
         setUserId(user?.id ?? null);
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from("emotion_history")
-          .select("id, emotion, confidence, date_time")
+          .select("id, emotion, confidence, date_time, latency_ms")
           .order("date_time", { ascending: false })
           .limit(200);
         
@@ -200,6 +201,9 @@ const Dashboard = () => {
                       <div className="text-right">
                         <p className="text-sm font-medium">{Math.round(d.confidence * 100)}%</p>
                         <p className="text-xs text-muted-foreground">{timeAgo(d.date_time)}</p>
+                        {d.latency_ms !== null && d.latency_ms !== undefined && (
+                          <p className="text-[10px] text-muted-foreground/70">{d.latency_ms}ms</p>
+                        )}
                       </div>
                     </div>
                   ))}

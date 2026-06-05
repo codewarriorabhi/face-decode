@@ -149,9 +149,11 @@ const Session = () => {
       canvas.getContext("2d")?.drawImage(video, 0, 0);
       const imageData = canvas.toDataURL("image/jpeg", 0.7);
 
+      const start = Date.now();
       const { data, error } = await supabase.functions.invoke("emotion-detect", {
         body: { image: imageData },
       });
+      const latency = Date.now() - start;
 
       if (error || !data) return;
       if (!data.face_detected) return;
@@ -172,6 +174,7 @@ const Session = () => {
         session_id: sessionId,
         emotion: top.emotion,
         confidence: top.confidence,
+        latency_ms: latency,
       });
     } catch (e) {
       console.error("Detection error:", e);

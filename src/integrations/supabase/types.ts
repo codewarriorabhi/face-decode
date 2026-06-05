@@ -20,6 +20,7 @@ export type Database = {
           date_time: string
           emotion: string
           id: string
+          latency_ms: number | null
           session_id: string | null
           user_id: string | null
         }
@@ -28,6 +29,7 @@ export type Database = {
           date_time?: string
           emotion: string
           id?: string
+          latency_ms?: number | null
           session_id?: string | null
           user_id?: string | null
         }
@@ -36,6 +38,7 @@ export type Database = {
           date_time?: string
           emotion?: string
           id?: string
+          latency_ms?: number | null
           session_id?: string | null
           user_id?: string | null
         }

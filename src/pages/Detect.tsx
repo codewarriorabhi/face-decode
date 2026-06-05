@@ -95,7 +95,9 @@ const Detect = () => {
     setIsAnalyzing(true);
     setResults(null);
     try {
+      const start = Date.now();
       const emotionResults = await analyzeImage(image);
+      const latency = Date.now() - start;
       setResults(emotionResults);
 
       // Save dominant result to database
@@ -105,10 +107,11 @@ const Detect = () => {
         console.log("Auth check result:", { user: user?.id, authError });
         if (user) {
           try {
-            const { error: insertError } = await supabase.from("emotion_history").insert({
+            const { error: insertError } = await (supabase as any).from("emotion_history").insert({
               user_id: user.id,
               emotion: dominant.emotion.toLowerCase(),
               confidence: dominant.confidence / 100,
+              latency_ms: latency,
             });
             if (insertError) {
               console.error("Database insert error:", insertError);
