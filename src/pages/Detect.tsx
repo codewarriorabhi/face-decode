@@ -384,6 +384,24 @@ const Detect = () => {
                         </motion.div>
                       )}
 
+                      {/* Profile info from face */}
+                      {meta && (meta.gender || meta.age_estimate !== null) && (
+                        <div className="grid grid-cols-2 gap-3 mb-5">
+                          <div className="rounded-xl bg-secondary/50 border border-border p-3 text-center">
+                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Gender</p>
+                            <p className="text-base font-display font-semibold capitalize">
+                              {meta.gender ?? "—"}
+                            </p>
+                          </div>
+                          <div className="rounded-xl bg-secondary/50 border border-border p-3 text-center">
+                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Approx. Age</p>
+                            <p className="text-base font-display font-semibold">
+                              {meta.age_estimate ?? "—"}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
                       {/* All emotions breakdown */}
                       <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">Full Breakdown</p>
                       <div className="space-y-3 flex-1">
