@@ -15,6 +15,8 @@ interface HistoryRow {
   confidence: number;
   date_time: string;
   latency_ms: number | null;
+  gender: string | null;
+  age_estimate: number | null;
 }
 
 const History = () => {
@@ -30,7 +32,7 @@ const History = () => {
     setLoading(true);
     let query = (supabase as any)
       .from("emotion_history")
-      .select("id, emotion, confidence, date_time, latency_ms")
+      .select("id, emotion, confidence, date_time, latency_ms, gender, age_estimate")
       .order("date_time", { ascending: false });
 
     const now = new Date();
@@ -118,6 +120,12 @@ const History = () => {
                   </div>
                   <div className="col-span-3 mobile:col-span-4">
                     <EmotionBadge emotion={item.emotion} size="sm" />
+                    {(item.gender || item.age_estimate !== null) && (
+                      <p className="text-[10px] text-muted-foreground mt-1 capitalize">
+                        {item.gender ?? "—"}
+                        {item.age_estimate !== null && item.age_estimate !== undefined ? ` · ~${item.age_estimate}y` : ""}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-3 mobile:col-span-4 text-right">
                     <div className="flex items-center justify-end gap-2">

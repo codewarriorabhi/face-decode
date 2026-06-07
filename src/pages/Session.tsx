@@ -175,6 +175,8 @@ const Session = () => {
         emotion: top.emotion,
         confidence: top.confidence,
         latency_ms: latency,
+        gender: data.gender ?? null,
+        age_estimate: typeof data.age_estimate === "number" ? data.age_estimate : null,
       });
     } catch (e) {
       console.error("Detection error:", e);

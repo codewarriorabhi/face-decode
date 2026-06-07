@@ -42,13 +42,14 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a facial emotion detection AI. Analyze the provided image and detect the dominant emotion on the face(s) visible.
+            content: `You are a facial emotion + profile detection AI. Analyze the provided image and detect:
+1) The dominant emotion on the face(s) visible (from: happy, sad, angry, neutral, surprised).
+2) The apparent gender of the most prominent face: "male", "female", or "unknown" if unclear.
+3) An approximate age in years (integer) of the most prominent face.
 
 You MUST respond using the suggest_emotions tool. Evaluate ALL 5 emotions and provide confidence scores that sum to 100.
 
-The 5 emotions to evaluate: happy, sad, angry, neutral, surprised.
-
-If no face is detected, return all emotions with 0 confidence and set dominant_emotion to "neutral" with a note.`,
+If no face is detected, return all emotions with 0 confidence, dominant_emotion = "neutral", face_detected = false, gender = "unknown", age_estimate = 0.`,
           },
           {
             role: "user",
@@ -71,7 +72,7 @@ If no face is detected, return all emotions with 0 confidence and set dominant_e
             type: "function",
             function: {
               name: "suggest_emotions",
-              description: "Return detected emotions with confidence scores",
+              description: "Return detected emotions with confidence scores and a basic visual profile of the face",
               parameters: {
                 type: "object",
                 properties: {
@@ -85,26 +86,26 @@ If no face is detected, return all emotions with 0 confidence and set dominant_e
                     items: {
                       type: "object",
                       properties: {
-                        emotion: {
-                          type: "string",
-                          enum: EMOTIONS,
-                        },
-                        confidence: {
-                          type: "number",
-                          description: "Confidence score from 0 to 100",
-                        },
+                        emotion: { type: "string", enum: EMOTIONS },
+                        confidence: { type: "number", description: "Confidence score from 0 to 100" },
                       },
                       required: ["emotion", "confidence"],
                       additionalProperties: false,
                     },
                     description: "All 5 emotions with confidence scores summing to 100",
                   },
-                  face_detected: {
-                    type: "boolean",
-                    description: "Whether a face was detected in the image",
+                  face_detected: { type: "boolean" },
+                  gender: {
+                    type: "string",
+                    enum: ["male", "female", "unknown"],
+                    description: "Apparent gender of the most prominent face. Use 'unknown' if unclear or no face.",
+                  },
+                  age_estimate: {
+                    type: "integer",
+                    description: "Approximate age in years of the most prominent face (0 if no face).",
                   },
                 },
-                required: ["dominant_emotion", "emotions", "face_detected"],
+                required: ["dominant_emotion", "emotions", "face_detected", "gender", "age_estimate"],
                 additionalProperties: false,
               },
             },
@@ -141,7 +142,6 @@ If no face is detected, return all emotions with 0 confidence and set dominant_e
 
     const emotionData = JSON.parse(toolCall.function.arguments);
 
-    // Sort emotions by confidence descending
     const sortedEmotions = emotionData.emotions.sort(
       (a: { confidence: number }, b: { confidence: number }) => b.confidence - a.confidence
     );
@@ -151,6 +151,8 @@ If no face is detected, return all emotions with 0 confidence and set dominant_e
         emotion: emotionData.dominant_emotion,
         confidence: sortedEmotions[0]?.confidence / 100 || 0,
         face_detected: emotionData.face_detected,
+        gender: emotionData.gender ?? "unknown",
+        age_estimate: emotionData.age_estimate ?? null,
         all_emotions: sortedEmotions.map((e: { emotion: string; confidence: number }) => ({
           emotion: e.emotion,
           confidence: e.confidence / 100,

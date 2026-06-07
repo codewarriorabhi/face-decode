@@ -12,9 +12,16 @@ type EmotionResult = {
   confidence: number;
 };
 
+type DetectMeta = {
+  gender: string | null;
+  age_estimate: number | null;
+};
+
 const EMOTIONS = ["Happy", "Sad", "Angry", "Neutral", "Surprised"];
 
-const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
+const analyzeImage = async (
+  imageBase64: string
+): Promise<{ results: EmotionResult[]; meta: DetectMeta }> => {
   const { data, error } = await supabase.functions.invoke("emotion-detect", {
     body: { image: imageBase64 },
   });
@@ -26,17 +33,26 @@ const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
     toast.warning("No face detected in the image. Try a clearer photo.");
   }
 
-  // Map API response to our format (API returns 0-1, we want 0-100)
-  return (data.all_emotions || []).map((e: { emotion: string; confidence: number }) => ({
-    emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
-    confidence: Math.round(e.confidence * 100),
-  }));
+  const results = (data.all_emotions || []).map(
+    (e: { emotion: string; confidence: number }) => ({
+      emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
+      confidence: Math.round(e.confidence * 100),
+    })
+  );
+  return {
+    results,
+    meta: {
+      gender: data.gender ?? null,
+      age_estimate: typeof data.age_estimate === "number" ? data.age_estimate : null,
+    },
+  };
 };
 
 const Detect = () => {
   const [mode, setMode] = useState<"webcam" | "upload">("webcam");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<EmotionResult[] | null>(null);
+  const [meta, setMeta] = useState<DetectMeta | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [webcamActive, setWebcamActive] = useState(false);
@@ -94,11 +110,13 @@ const Detect = () => {
     }
     setIsAnalyzing(true);
     setResults(null);
+    setMeta(null);
     try {
       const start = Date.now();
-      const emotionResults = await analyzeImage(image);
+      const { results: emotionResults, meta: detectMeta } = await analyzeImage(image);
       const latency = Date.now() - start;
       setResults(emotionResults);
+      setMeta(detectMeta);
 
       // Save dominant result to database
       if (emotionResults.length > 0) {
@@ -112,6 +130,8 @@ const Detect = () => {
               emotion: dominant.emotion.toLowerCase(),
               confidence: dominant.confidence / 100,
               latency_ms: latency,
+              gender: detectMeta.gender,
+              age_estimate: detectMeta.age_estimate,
             });
             if (insertError) {
               console.error("Database insert error:", insertError);
@@ -163,6 +183,7 @@ const Detect = () => {
 
   const reset = () => {
     setResults(null);
+    setMeta(null);
     setUploadedImage(null);
     setCapturedImage(null);
     stopWebcam();
@@ -361,6 +382,24 @@ const Detect = () => {
                             <p className="text-xs text-muted-foreground mt-0.5">Confidence Score</p>
                           </div>
                         </motion.div>
+                      )}
+
+                      {/* Profile info from face */}
+                      {meta && (meta.gender || meta.age_estimate !== null) && (
+                        <div className="grid grid-cols-2 gap-3 mb-5">
+                          <div className="rounded-xl bg-secondary/50 border border-border p-3 text-center">
+                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Gender</p>
+                            <p className="text-base font-display font-semibold capitalize">
+                              {meta.gender ?? "—"}
+                            </p>
+                          </div>
+                          <div className="rounded-xl bg-secondary/50 border border-border p-3 text-center">
+                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Approx. Age</p>
+                            <p className="text-base font-display font-semibold">
+                              {meta.age_estimate ?? "—"}
+                            </p>
+                          </div>
+                        </div>
                       )}
 
                       {/* All emotions breakdown */}

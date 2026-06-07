@@ -21,6 +21,8 @@ type EmotionEntry = {
   confidence: number;
   date_time: string;
   latency_ms: number | null;
+  gender: string | null;
+  age_estimate: number | null;
 };
 
 type Phase = "loading" | "invalid" | "live" | "expired";
@@ -61,7 +63,7 @@ const SessionDashboard = () => {
         (supabase as any).from("sessions").select("*").eq("session_id", sessionId).single(),
         (supabase as any)
           .from("emotion_history")
-          .select("id, emotion, confidence, date_time, latency_ms")
+          .select("id, emotion, confidence, date_time, latency_ms, gender, age_estimate")
           .filter("session_id", "eq", sessionId)
           .order("date_time", { ascending: true }),
       ]);
@@ -352,6 +354,14 @@ const SessionDashboard = () => {
                           <> · {latestEmotion.latency_ms}ms</>
                         )}
                       </p>
+                      {(latestEmotion.gender || latestEmotion.age_estimate !== null) && (
+                        <p className="text-xs text-muted-foreground mt-1 capitalize">
+                          Subject: {latestEmotion.gender ?? "unknown"}
+                          {latestEmotion.age_estimate !== null && latestEmotion.age_estimate !== undefined
+                            ? ` · ~${latestEmotion.age_estimate}y`
+                            : ""}
+                        </p>
+                      )}
                     </div>
                     {phase === "live" && (
                       <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-destructive/10 text-xs text-destructive">

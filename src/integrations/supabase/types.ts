@@ -16,27 +16,33 @@ export type Database = {
     Tables: {
       emotion_history: {
         Row: {
+          age_estimate: number | null
           confidence: number
           date_time: string
           emotion: string
+          gender: string | null
           id: string
           latency_ms: number | null
           session_id: string | null
           user_id: string | null
         }
         Insert: {
+          age_estimate?: number | null
           confidence: number
           date_time?: string
           emotion: string
+          gender?: string | null
           id?: string
           latency_ms?: number | null
           session_id?: string | null
           user_id?: string | null
         }
         Update: {
+          age_estimate?: number | null
           confidence?: number
           date_time?: string
           emotion?: string
+          gender?: string | null
           id?: string
           latency_ms?: number | null
           session_id?: string | null
