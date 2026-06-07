@@ -52,6 +52,7 @@ const Detect = () => {
   const [mode, setMode] = useState<"webcam" | "upload">("webcam");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<EmotionResult[] | null>(null);
+  const [meta, setMeta] = useState<DetectMeta | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [webcamActive, setWebcamActive] = useState(false);
