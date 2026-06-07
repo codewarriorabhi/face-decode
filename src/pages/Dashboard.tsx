@@ -198,8 +198,16 @@ const Dashboard = () => {
               ) : (
                 <div className="space-y-3">
                   {recentDetections.map((d) => (
-                    <div key={d.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                      <EmotionBadge emotion={d.emotion} size="sm" />
+                    <div key={d.id} className="flex items-center justify-between py-2 border-b border-border last:border-0 gap-3">
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <EmotionBadge emotion={d.emotion} size="sm" />
+                        {(d.gender || d.age_estimate !== null) && (
+                          <p className="text-[10px] text-muted-foreground capitalize">
+                            {d.gender ?? "—"}
+                            {d.age_estimate !== null && d.age_estimate !== undefined ? ` · ~${d.age_estimate}y` : ""}
+                          </p>
+                        )}
+                      </div>
                       <div className="text-right">
                         <p className="text-sm font-medium">{Math.round(d.confidence * 100)}%</p>
                         <p className="text-xs text-muted-foreground">{timeAgo(d.date_time)}</p>
