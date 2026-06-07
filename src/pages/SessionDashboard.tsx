@@ -354,6 +354,14 @@ const SessionDashboard = () => {
                           <> · {latestEmotion.latency_ms}ms</>
                         )}
                       </p>
+                      {(latestEmotion.gender || latestEmotion.age_estimate !== null) && (
+                        <p className="text-xs text-muted-foreground mt-1 capitalize">
+                          Subject: {latestEmotion.gender ?? "unknown"}
+                          {latestEmotion.age_estimate !== null && latestEmotion.age_estimate !== undefined
+                            ? ` · ~${latestEmotion.age_estimate}y`
+                            : ""}
+                        </p>
+                      )}
                     </div>
                     {phase === "live" && (
                       <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-destructive/10 text-xs text-destructive">
