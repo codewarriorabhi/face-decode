@@ -183,6 +183,7 @@ const Detect = () => {
 
   const reset = () => {
     setResults(null);
+    setMeta(null);
     setUploadedImage(null);
     setCapturedImage(null);
     stopWebcam();
