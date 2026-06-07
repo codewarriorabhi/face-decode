@@ -32,7 +32,7 @@ const History = () => {
     setLoading(true);
     let query = (supabase as any)
       .from("emotion_history")
-      .select("id, emotion, confidence, date_time, latency_ms")
+      .select("id, emotion, confidence, date_time, latency_ms, gender, age_estimate")
       .order("date_time", { ascending: false });
 
     const now = new Date();
