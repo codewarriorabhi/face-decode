@@ -63,7 +63,7 @@ const SessionDashboard = () => {
         (supabase as any).from("sessions").select("*").eq("session_id", sessionId).single(),
         (supabase as any)
           .from("emotion_history")
-          .select("id, emotion, confidence, date_time, latency_ms")
+          .select("id, emotion, confidence, date_time, latency_ms, gender, age_estimate")
           .filter("session_id", "eq", sessionId)
           .order("date_time", { ascending: true }),
       ]);
