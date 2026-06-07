@@ -120,6 +120,12 @@ const History = () => {
                   </div>
                   <div className="col-span-3 mobile:col-span-4">
                     <EmotionBadge emotion={item.emotion} size="sm" />
+                    {(item.gender || item.age_estimate !== null) && (
+                      <p className="text-[10px] text-muted-foreground mt-1 capitalize">
+                        {item.gender ?? "—"}
+                        {item.age_estimate !== null && item.age_estimate !== undefined ? ` · ~${item.age_estimate}y` : ""}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-3 mobile:col-span-4 text-right">
                     <div className="flex items-center justify-end gap-2">
