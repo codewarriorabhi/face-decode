@@ -37,7 +37,6 @@ const Navbar = () => {
                   <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How it Works</a>
                 </>
               )}
-              <Link to="/generate" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Generate Link</Link>
               <Link to="/auth">
                 <Button variant="ghost" size="sm">Log In</Button>
               </Link>
@@ -79,9 +78,6 @@ const Navbar = () => {
                       <a href="#how-it-works" className="py-2 text-sm" onClick={() => setMobileOpen(false)}>How it Works</a>
                     </>
                   )}
-                  <Link to="/generate" onClick={() => setMobileOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start">Generate Link</Button>
-                  </Link>
                   <Link to="/auth" onClick={() => setMobileOpen(false)}>
                     <Button variant="ghost" className="w-full">Log In</Button>
                   </Link>
@@ -106,3 +102,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
