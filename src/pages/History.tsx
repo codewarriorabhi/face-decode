@@ -15,6 +15,8 @@ interface HistoryRow {
   confidence: number;
   date_time: string;
   latency_ms: number | null;
+  gender: string | null;
+  age_estimate: number | null;
 }
 
 const History = () => {
