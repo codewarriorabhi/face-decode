@@ -42,13 +42,14 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a facial emotion detection AI. Analyze the provided image and detect the dominant emotion on the face(s) visible.
+            content: `You are a facial emotion + profile detection AI. Analyze the provided image and detect:
+1) The dominant emotion on the face(s) visible (from: happy, sad, angry, neutral, surprised).
+2) The apparent gender of the most prominent face: "male", "female", or "unknown" if unclear.
+3) An approximate age in years (integer) of the most prominent face.
 
 You MUST respond using the suggest_emotions tool. Evaluate ALL 5 emotions and provide confidence scores that sum to 100.
 
-The 5 emotions to evaluate: happy, sad, angry, neutral, surprised.
-
-If no face is detected, return all emotions with 0 confidence and set dominant_emotion to "neutral" with a note.`,
+If no face is detected, return all emotions with 0 confidence, dominant_emotion = "neutral", face_detected = false, gender = "unknown", age_estimate = 0.`,
           },
           {
             role: "user",
