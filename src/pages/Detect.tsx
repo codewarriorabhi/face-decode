@@ -12,9 +12,16 @@ type EmotionResult = {
   confidence: number;
 };
 
+type DetectMeta = {
+  gender: string | null;
+  age_estimate: number | null;
+};
+
 const EMOTIONS = ["Happy", "Sad", "Angry", "Neutral", "Surprised"];
 
-const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
+const analyzeImage = async (
+  imageBase64: string
+): Promise<{ results: EmotionResult[]; meta: DetectMeta }> => {
   const { data, error } = await supabase.functions.invoke("emotion-detect", {
     body: { image: imageBase64 },
   });
@@ -26,11 +33,19 @@ const analyzeImage = async (imageBase64: string): Promise<EmotionResult[]> => {
     toast.warning("No face detected in the image. Try a clearer photo.");
   }
 
-  // Map API response to our format (API returns 0-1, we want 0-100)
-  return (data.all_emotions || []).map((e: { emotion: string; confidence: number }) => ({
-    emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
-    confidence: Math.round(e.confidence * 100),
-  }));
+  const results = (data.all_emotions || []).map(
+    (e: { emotion: string; confidence: number }) => ({
+      emotion: e.emotion.charAt(0).toUpperCase() + e.emotion.slice(1),
+      confidence: Math.round(e.confidence * 100),
+    })
+  );
+  return {
+    results,
+    meta: {
+      gender: data.gender ?? null,
+      age_estimate: typeof data.age_estimate === "number" ? data.age_estimate : null,
+    },
+  };
 };
 
 const Detect = () => {
