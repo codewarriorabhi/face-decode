@@ -110,11 +110,13 @@ const Detect = () => {
     }
     setIsAnalyzing(true);
     setResults(null);
+    setMeta(null);
     try {
       const start = Date.now();
-      const emotionResults = await analyzeImage(image);
+      const { results: emotionResults, meta: detectMeta } = await analyzeImage(image);
       const latency = Date.now() - start;
       setResults(emotionResults);
+      setMeta(detectMeta);
 
       // Save dominant result to database
       if (emotionResults.length > 0) {
@@ -128,6 +130,8 @@ const Detect = () => {
               emotion: dominant.emotion.toLowerCase(),
               confidence: dominant.confidence / 100,
               latency_ms: latency,
+              gender: detectMeta.gender,
+              age_estimate: detectMeta.age_estimate,
             });
             if (insertError) {
               console.error("Database insert error:", insertError);
