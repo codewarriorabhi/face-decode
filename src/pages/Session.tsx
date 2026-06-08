@@ -443,8 +443,16 @@ const Session = () => {
             )}
             <span className="flex items-center gap-1.5">
               <CircleDot className="w-3.5 h-3.5 text-destructive animate-pulse" />
-              LIVE
+              {isHidden ? "BG" : "LIVE"}
             </span>
+            {backgroundReady && (
+              <span
+                className="hidden mobile:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider"
+                title="Background mode: detection keeps running when this tab is hidden"
+              >
+                BG Mode
+              </span>
+            )}
           </div>
         </div>
       </div>
