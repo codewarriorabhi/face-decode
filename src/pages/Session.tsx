@@ -38,11 +38,16 @@ const Session = () => {
   const [recentEmotions, setRecentEmotions] = useState<EmotionResult[]>([]);
   const [timeRemaining, setTimeRemaining] = useState("");
   const [totalDetections, setTotalDetections] = useState(0);
+  const [isHidden, setIsHidden] = useState(false);
+  const [backgroundReady, setBackgroundReady] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const isDetectingRef = useRef(false);
+  const workerRef = useRef<Worker | null>(null);
+  const wakeLockRef = useRef<any>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Load session
   useEffect(() => {
@@ -93,25 +98,71 @@ const Session = () => {
   const stopWebcam = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    workerRef.current?.postMessage({ type: "stop" });
+    workerRef.current?.terminate();
+    workerRef.current = null;
+    try { wakeLockRef.current?.release?.(); } catch {}
+    wakeLockRef.current = null;
+    try { audioCtxRef.current?.close?.(); } catch {}
+    audioCtxRef.current = null;
+  }, []);
+
+  // Acquire Screen Wake Lock so device/screen does not sleep mid-session.
+  const acquireWakeLock = useCallback(async () => {
+    try {
+      // @ts-ignore - wakeLock typing varies
+      if ("wakeLock" in navigator) {
+        // @ts-ignore
+        wakeLockRef.current = await navigator.wakeLock.request("screen");
+      }
+    } catch (e) {
+      console.warn("Wake Lock unavailable:", e);
+    }
+  }, []);
+
+  // Silent audio loop — signals the tab is "playing media", which prevents
+  // Chromium from freezing the page when it's hidden/backgrounded.
+  const startSilentAudio = useCallback(() => {
+    try {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      gain.gain.value = 0.0001; // effectively silent
+      osc.frequency.value = 1;
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      audioCtxRef.current = ctx;
+    } catch (e) {
+      console.warn("Silent audio keepalive failed:", e);
+    }
   }, []);
 
   const startWebcam = useCallback(async () => {
     setPhase("requesting-camera");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: "user", 
+        video: {
+          facingMode: "user",
           width: { ideal: 640, max: 1280 },
           height: { ideal: 480, max: 720 }
         },
       });
       streamRef.current = stream;
+      // Best-effort browser-permission for end-of-session notification
+      if ("Notification" in window && Notification.permission === "default") {
+        try { await Notification.requestPermission(); } catch {}
+      }
+      await acquireWakeLock();
+      startSilentAudio();
+      setBackgroundReady(true);
       setPhase("detecting");
     } catch {
       toast.error("Camera access denied. Please allow camera permissions to continue.");
       setPhase("consent");
     }
-  }, []);
+  }, [acquireWakeLock, startSilentAudio]);
 
   // Attach the acquired stream to the video element when it becomes available.
   useEffect(() => {
@@ -185,12 +236,49 @@ const Session = () => {
     }
   }, [sessionId]);
 
-  // Detection interval: every 3 seconds
+  // Detection loop driven by a Web Worker so it isn't throttled when the tab is hidden.
   useEffect(() => {
     if (phase !== "detecting") return;
-    const id = setInterval(runDetection, 3000);
-    return () => clearInterval(id);
+
+    const worker = new Worker("/detection-worker.js");
+    workerRef.current = worker;
+    worker.onmessage = (e) => {
+      if (e.data?.type === "tick") void runDetection();
+    };
+    worker.postMessage({ type: "start", interval: 3000 });
+
+    // Kick off an immediate first detection so the user sees activity instantly.
+    void runDetection();
+
+    return () => {
+      worker.postMessage({ type: "stop" });
+      worker.terminate();
+      workerRef.current = null;
+    };
   }, [phase, runDetection]);
+
+  // Track tab visibility (informational) and re-acquire Wake Lock on resume,
+  // since browsers auto-release it when the document is hidden.
+  useEffect(() => {
+    const onVis = () => {
+      const hidden = document.visibilityState === "hidden";
+      setIsHidden(hidden);
+      if (!hidden && phase === "detecting" && !wakeLockRef.current) {
+        void acquireWakeLock();
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    onVis();
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [phase, acquireWakeLock]);
+
+  // Notify the user when their session ends (helpful if tab is backgrounded).
+  useEffect(() => {
+    if (phase !== "expired") return;
+    if ("Notification" in window && Notification.permission === "granted") {
+      try { new Notification("EmotionAI", { body: "Your tracking session has ended." }); } catch {}
+    }
+  }, [phase]);
 
   // Cleanup
   useEffect(() => () => stopWebcam(), [stopWebcam]);
@@ -355,8 +443,16 @@ const Session = () => {
             )}
             <span className="flex items-center gap-1.5">
               <CircleDot className="w-3.5 h-3.5 text-destructive animate-pulse" />
-              LIVE
+              {isHidden ? "BG" : "LIVE"}
             </span>
+            {backgroundReady && (
+              <span
+                className="hidden mobile:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold uppercase tracking-wider"
+                title="Background mode: detection keeps running when this tab is hidden"
+              >
+                BG Mode
+              </span>
+            )}
           </div>
         </div>
       </div>
