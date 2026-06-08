@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import StatCard from "@/components/StatCard";
 import EmotionBadge from "@/components/EmotionBadge";
+import ProfilePanel from "@/components/ProfilePanel";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { toast } from "sonner";
@@ -220,6 +221,11 @@ const Dashboard = () => {
                 </div>
               )}
             </motion.div>
+          </div>
+
+          {/* Profile Summary */}
+          <div className="mt-6">
+            <ProfilePanel history={history} />
           </div>
 
           {/* Quick actions */}
