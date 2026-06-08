@@ -38,11 +38,16 @@ const Session = () => {
   const [recentEmotions, setRecentEmotions] = useState<EmotionResult[]>([]);
   const [timeRemaining, setTimeRemaining] = useState("");
   const [totalDetections, setTotalDetections] = useState(0);
+  const [isHidden, setIsHidden] = useState(false);
+  const [backgroundReady, setBackgroundReady] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const isDetectingRef = useRef(false);
+  const workerRef = useRef<Worker | null>(null);
+  const wakeLockRef = useRef<any>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Load session
   useEffect(() => {
