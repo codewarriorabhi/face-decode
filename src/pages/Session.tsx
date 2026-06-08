@@ -236,12 +236,49 @@ const Session = () => {
     }
   }, [sessionId]);
 
-  // Detection interval: every 3 seconds
+  // Detection loop driven by a Web Worker so it isn't throttled when the tab is hidden.
   useEffect(() => {
     if (phase !== "detecting") return;
-    const id = setInterval(runDetection, 3000);
-    return () => clearInterval(id);
+
+    const worker = new Worker("/detection-worker.js");
+    workerRef.current = worker;
+    worker.onmessage = (e) => {
+      if (e.data?.type === "tick") void runDetection();
+    };
+    worker.postMessage({ type: "start", interval: 3000 });
+
+    // Kick off an immediate first detection so the user sees activity instantly.
+    void runDetection();
+
+    return () => {
+      worker.postMessage({ type: "stop" });
+      worker.terminate();
+      workerRef.current = null;
+    };
   }, [phase, runDetection]);
+
+  // Track tab visibility (informational) and re-acquire Wake Lock on resume,
+  // since browsers auto-release it when the document is hidden.
+  useEffect(() => {
+    const onVis = () => {
+      const hidden = document.visibilityState === "hidden";
+      setIsHidden(hidden);
+      if (!hidden && phase === "detecting" && !wakeLockRef.current) {
+        void acquireWakeLock();
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    onVis();
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [phase, acquireWakeLock]);
+
+  // Notify the user when their session ends (helpful if tab is backgrounded).
+  useEffect(() => {
+    if (phase !== "expired") return;
+    if ("Notification" in window && Notification.permission === "granted") {
+      try { new Notification("EmotionAI", { body: "Your tracking session has ended." }); } catch {}
+    }
+  }, [phase]);
 
   // Cleanup
   useEffect(() => () => stopWebcam(), [stopWebcam]);
