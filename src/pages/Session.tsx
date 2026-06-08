@@ -98,25 +98,71 @@ const Session = () => {
   const stopWebcam = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    workerRef.current?.postMessage({ type: "stop" });
+    workerRef.current?.terminate();
+    workerRef.current = null;
+    try { wakeLockRef.current?.release?.(); } catch {}
+    wakeLockRef.current = null;
+    try { audioCtxRef.current?.close?.(); } catch {}
+    audioCtxRef.current = null;
+  }, []);
+
+  // Acquire Screen Wake Lock so device/screen does not sleep mid-session.
+  const acquireWakeLock = useCallback(async () => {
+    try {
+      // @ts-ignore - wakeLock typing varies
+      if ("wakeLock" in navigator) {
+        // @ts-ignore
+        wakeLockRef.current = await navigator.wakeLock.request("screen");
+      }
+    } catch (e) {
+      console.warn("Wake Lock unavailable:", e);
+    }
+  }, []);
+
+  // Silent audio loop — signals the tab is "playing media", which prevents
+  // Chromium from freezing the page when it's hidden/backgrounded.
+  const startSilentAudio = useCallback(() => {
+    try {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      gain.gain.value = 0.0001; // effectively silent
+      osc.frequency.value = 1;
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      audioCtxRef.current = ctx;
+    } catch (e) {
+      console.warn("Silent audio keepalive failed:", e);
+    }
   }, []);
 
   const startWebcam = useCallback(async () => {
     setPhase("requesting-camera");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: "user", 
+        video: {
+          facingMode: "user",
           width: { ideal: 640, max: 1280 },
           height: { ideal: 480, max: 720 }
         },
       });
       streamRef.current = stream;
+      // Best-effort browser-permission for end-of-session notification
+      if ("Notification" in window && Notification.permission === "default") {
+        try { await Notification.requestPermission(); } catch {}
+      }
+      await acquireWakeLock();
+      startSilentAudio();
+      setBackgroundReady(true);
       setPhase("detecting");
     } catch {
       toast.error("Camera access denied. Please allow camera permissions to continue.");
       setPhase("consent");
     }
-  }, []);
+  }, [acquireWakeLock, startSilentAudio]);
 
   // Attach the acquired stream to the video element when it becomes available.
   useEffect(() => {
