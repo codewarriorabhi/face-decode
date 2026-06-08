@@ -223,6 +223,11 @@ const Dashboard = () => {
             </motion.div>
           </div>
 
+          {/* Profile Summary */}
+          <div className="mt-6">
+            <ProfilePanel history={history} />
+          </div>
+
           {/* Quick actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
